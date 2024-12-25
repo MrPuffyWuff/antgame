@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://6ewe3g00p81j" path="res://assets/ship/hull.png" id="1_yvpnn"]
 [ext_resource type="Texture2D" uid="uid://uxkepxt7tjip" path="res://assets/ship/sail.png" id="3_qs66c"]
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_27gv3")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
@@ -16,4 +16,20 @@ rotation = 3.14159
 texture = ExtResource("1_yvpnn")
 
 [node name="Sail" type="Sprite2D" parent="Hull"]
+z_index = 1
 texture = ExtResource("3_qs66c")
+
+[node name="Left" type="Marker2D" parent="."]
+position = Vector2(20, 0)
+rotation = -1.5708
+
+[node name="LeftReload" type="Timer" parent="Left"]
+
+[node name="Right" type="Marker2D" parent="."]
+position = Vector2(-20, 0)
+rotation = 1.5708
+
+[node name="RightReload" type="Timer" parent="Right"]
+
+[connection signal="timeout" from="Left/LeftReload" to="." method="_on_left_reload_timeout"]
+[connection signal="timeout" from="Right/RightReload" to="." method="_on_right_reload_timeout"]

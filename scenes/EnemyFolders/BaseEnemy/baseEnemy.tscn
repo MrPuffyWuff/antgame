@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://6c4ld3yry7rx"]
+
+[ext_resource type="Script" path="res://scenes/EnemyFolders/BaseEnemy/base_enemy.gd" id="1_2x7fj"]
+[ext_resource type="Texture2D" uid="uid://6ewe3g00p81j" path="res://assets/ship/hull.png" id="1_gwpfq"]
+
+[node name="BaseEnemy" type="CharacterBody2D"]
+script = ExtResource("1_2x7fj")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(0, -16, -7, -14, -9, -11, -9, -3, -8, -1, -5, 11, 0, 14, 5, 11, 8, -1, 9, -3, 9, -11, 7, -14)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -3.14159
+texture = ExtResource("1_gwpfq")

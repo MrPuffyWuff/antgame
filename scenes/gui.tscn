@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dw0r6bthj4ny3"]
+
+[node name="GUI" type="CanvasLayer"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 497.0
+offset_bottom = 150.0

@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmf7l60uvbrry"]
+
+[ext_resource type="Texture2D" uid="uid://ben3idqsbql3s" path="res://assets/cannonball/cannonballMedium.png" id="1_2yck7"]
+[ext_resource type="Script" path="res://scenes/cannonball.gd" id="1_qvg0q"]
+[ext_resource type="Texture2D" uid="uid://blcnoolckj6um" path="res://assets/cannonball/cannonballLarge.png" id="2_n26kj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h8pgs"]
+radius = 9.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l47ci"]
+radius = 7.0
+
+[node name="Cannonball" type="CharacterBody2D"]
+script = ExtResource("1_qvg0q")
+
+[node name="LargeSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("2_n26kj")
+
+[node name="LargeCollision" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_h8pgs")
+
+[node name="MediumSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("1_2yck7")
+
+[node name="MediumCollision" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_l47ci")

@@ -3,10 +3,16 @@ extends CharacterBody2D
 @export var speedMax := 200
 @export var speedMin := -100
 @export var acceleration := 1
-var speed := 0
 @export var rotation_speed := 1.5
 
+var speed := 0
+var health := 10
+var target_velocity : Vector2
 var rotation_direction := 0.0
+
+const CANNONBALL = preload("res://scenes/cannonball.tscn")
+var leftCannonAble := true
+var rightCannonAble := true
 
 func get_input():
 	rotation_direction = Input.get_axis("left", "right")
@@ -15,10 +21,46 @@ func get_input():
 		speed = speedMax
 	elif speed < speedMin:
 		speed = speedMin
-	
+	checkGunKeys()
 
-func _physics_process(delta):
+func checkGunKeys():
+	if Input.is_action_pressed("shootLeft") && leftCannonAble:
+		var projectile = CANNONBALL.instantiate()
+		projectile.setSize("MEDIUM")
+		projectile.position = $Left.global_position
+		projectile.setTargetVelocity($Left.global_position - $".".global_position)
+		get_parent().add_child(projectile)
+		leftCannonAble = false
+		$Left/LeftReload.start()
+	if Input.is_action_pressed("shootRight") && rightCannonAble:
+		var projectile = CANNONBALL.instantiate()
+		projectile.setSize("LARGE")
+		projectile.position = $Right.global_position
+		projectile.setTargetVelocity($Right.global_position - $".".global_position)
+		get_parent().add_child(projectile)
+		rightCannonAble = false
+		$Right/RightReload.start()
+
+func damage(amount):
+	health -= amount
+	print("Player took " + str(amount) + " damage")
+
+func setTargetVelocity():
+	target_velocity = transform.y * speed
+	#Method of adding wind
+	#target_velocity += Vector2(50,50)
+
+func _physics_process(delta: float):
 	get_input()
-	velocity = transform.y * speed
+	setTargetVelocity()
+	velocity = target_velocity
 	rotation += rotation_direction * rotation_speed * delta
 	move_and_slide()
+
+
+func _on_left_reload_timeout() -> void:
+	leftCannonAble = true
+
+
+func _on_right_reload_timeout() -> void:
+	rightCannonAble = true
