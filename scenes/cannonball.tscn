@@ -1,14 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmf7l60uvbrry"]
+[gd_scene load_steps=8 format=3 uid="uid://dmf7l60uvbrry"]
 
 [ext_resource type="Texture2D" uid="uid://ben3idqsbql3s" path="res://assets/cannonball/cannonballMedium.png" id="1_2yck7"]
 [ext_resource type="Script" path="res://scenes/cannonball.gd" id="1_qvg0q"]
 [ext_resource type="Texture2D" uid="uid://blcnoolckj6um" path="res://assets/cannonball/cannonballLarge.png" id="2_n26kj"]
+[ext_resource type="Texture2D" uid="uid://mf01wchq0sag" path="res://assets/cannonball/cannonballSmall.png" id="4_x4li1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h8pgs"]
 radius = 9.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_l47ci"]
 radius = 7.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vsgq4"]
+radius = 4.12311
 
 [node name="Cannonball" type="CharacterBody2D"]
 script = ExtResource("1_qvg0q")
@@ -17,7 +21,9 @@ script = ExtResource("1_qvg0q")
 visible = false
 texture = ExtResource("2_n26kj")
 
-[node name="LargeCollision" type="CollisionShape2D" parent="."]
+[node name="LargeArea" type="Area2D" parent="."]
+
+[node name="LargeCollision" type="CollisionShape2D" parent="LargeArea"]
 visible = false
 shape = SubResource("CircleShape2D_h8pgs")
 
@@ -25,6 +31,22 @@ shape = SubResource("CircleShape2D_h8pgs")
 visible = false
 texture = ExtResource("1_2yck7")
 
-[node name="MediumCollision" type="CollisionShape2D" parent="."]
+[node name="MediumArea" type="Area2D" parent="."]
+
+[node name="MediumCollision" type="CollisionShape2D" parent="MediumArea"]
 visible = false
 shape = SubResource("CircleShape2D_l47ci")
+
+[node name="SmallSprite" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("4_x4li1")
+
+[node name="SmallArea" type="Area2D" parent="."]
+
+[node name="SmallCollision" type="CollisionShape2D" parent="SmallArea"]
+visible = false
+shape = SubResource("CircleShape2D_vsgq4")
+
+[connection signal="body_entered" from="LargeArea" to="." method="_on_area_body_entered"]
+[connection signal="body_entered" from="MediumArea" to="." method="_on_area_body_entered"]
+[connection signal="body_entered" from="SmallArea" to="." method="_on_area_body_entered"]

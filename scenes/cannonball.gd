@@ -1,27 +1,51 @@
 extends CharacterBody2D
 
-var target_velocity := Vector2(0,1)
-var speed = 10
-var size = "LARGE"
+var target_velocity_dir := Vector2(0,1)
+var speed := 100
+var size : String
+var speed_resistance := 1
+var speed_cutoff := 25
 
-func setTargetVelocity(inputVel : Vector2) -> void:
-	target_velocity = inputVel.normalized()
-	target_velocity *= speed
+var appliedDamage : DmgPacket
 
+func setTargetVelocityDir(inputVel : Vector2) -> void:
+	target_velocity_dir = inputVel.normalized()
+
+func addTargetVelocityDir(inputVel : Vector2) -> void:
+	target_velocity_dir = target_velocity_dir.normalized() * speed
+	target_velocity_dir += inputVel
 func setSize(inputSize : String):
 	size = inputSize
-	print(size)
+	$LargeArea.monitoring = false
+	$LargeSprite.visible = false
+	
+	$MediumArea.monitoring  = false
+	$MediumSprite.visible = false
+	
+	$SmallArea.monitoring  = false
+	$SmallSprite.visible = false
 	if size == "LARGE":
-		$LargeCollision.visible = true
+		$LargeArea.monitoring  = true
 		$LargeSprite.visible = true
-		$MediumCollision.visible = false
-		$MediumSprite.visible = false
 	elif size == "MEDIUM":
-		$LargeCollision.visible = false
-		$LargeSprite.visible = false
-		$MediumCollision.visible = true
+		$MediumArea.monitoring  = true
 		$MediumSprite.visible = true
+	elif size == "SMALL":
+		$SmallArea.monitoring  = true
+		$SmallSprite.visible = true
+
+
 
 func _physics_process(delta: float) -> void:
-	velocity = target_velocity
-	move_and_collide(velocity)
+	velocity = target_velocity_dir
+	target_velocity_dir -= target_velocity_dir.normalized() * speed_resistance
+	
+	if velocity.length() < speed_cutoff:
+		kill_self()
+	move_and_slide()
+
+func kill_self():
+	queue_free()
+
+func _on_area_body_entered(body: Node2D) -> void:
+	print("COLLISION HERERRE")

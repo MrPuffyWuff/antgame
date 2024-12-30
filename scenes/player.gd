@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @export var speedMax := 200
 @export var speedMin := -100
-@export var acceleration := 1
+@export var acceleration := 100
 @export var rotation_speed := 1.5
 
 var speed := 0
@@ -23,40 +23,45 @@ func get_input():
 		speed = speedMin
 	checkGunKeys()
 
+func summonProjectile(size : String, markerNode : Marker2D):
+	var projectile = CANNONBALL.instantiate()
+	projectile.setSize(size)
+	projectile.position = markerNode.global_position
+	projectile.setTargetVelocityDir(markerNode.global_position - $".".global_position)
+	projectile.addTargetVelocityDir(target_velocity)
+	get_parent().add_child(projectile)
+	markerNode.get_child(0).start()
+
 func checkGunKeys():
 	if Input.is_action_pressed("shootLeft") && leftCannonAble:
-		var projectile = CANNONBALL.instantiate()
-		projectile.setSize("MEDIUM")
-		projectile.position = $Left.global_position
-		projectile.setTargetVelocity($Left.global_position - $".".global_position)
-		get_parent().add_child(projectile)
+		summonProjectile("SMALL", $Left)
 		leftCannonAble = false
-		$Left/LeftReload.start()
 	if Input.is_action_pressed("shootRight") && rightCannonAble:
-		var projectile = CANNONBALL.instantiate()
-		projectile.setSize("LARGE")
-		projectile.position = $Right.global_position
-		projectile.setTargetVelocity($Right.global_position - $".".global_position)
-		get_parent().add_child(projectile)
+		summonProjectile("SMALL", $Right)
 		rightCannonAble = false
-		$Right/RightReload.start()
 
-func damage(amount):
+func take_damage(amount):
 	health -= amount
 	print("Player took " + str(amount) + " damage")
 
-func setTargetVelocity():
+func setTargetVelocity(delta : float):
 	target_velocity = transform.y * speed
 	#Method of adding wind
 	#target_velocity += Vector2(50,50)
 
 func _physics_process(delta: float):
 	get_input()
-	setTargetVelocity()
+	setTargetVelocity(delta)
 	velocity = target_velocity
 	rotation += rotation_direction * rotation_speed * delta
 	move_and_slide()
+	#debug()
 
+func debug():
+	print("--Player")
+	print("Speed: " + str(speed))
+	print("Acceleration: " + str(acceleration))
+	print("Current Vector: " + str(velocity))
 
 func _on_left_reload_timeout() -> void:
 	leftCannonAble = true
