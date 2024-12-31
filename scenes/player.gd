@@ -14,6 +14,9 @@ const CANNONBALL = preload("res://scenes/cannonball.tscn")
 var leftCannonAble := true
 var rightCannonAble := true
 
+var leftDelay : float = 0.5
+var rightDelay : float  = 0.5
+
 func get_input():
 	rotation_direction = Input.get_axis("left", "right")
 	speed += acceleration * Input.get_axis("down", "up")
@@ -23,21 +26,23 @@ func get_input():
 		speed = speedMin
 	checkGunKeys()
 
-func summonProjectile(size : String, markerNode : Marker2D):
+func summonProjectile(size : String, markerNode : Marker2D, delay : float):
 	var projectile = CANNONBALL.instantiate()
 	projectile.setSize(size)
 	projectile.position = markerNode.global_position
 	projectile.setTargetVelocityDir(markerNode.global_position - $".".global_position)
 	projectile.addTargetVelocityDir(target_velocity)
 	get_parent().add_child(projectile)
+	markerNode.get_child(0).wait_time = delay
 	markerNode.get_child(0).start()
+	projectile.start_life()
 
 func checkGunKeys():
 	if Input.is_action_pressed("shootLeft") && leftCannonAble:
-		summonProjectile("SMALL", $Left)
+		summonProjectile("SMALL", $Left, leftDelay)
 		leftCannonAble = false
 	if Input.is_action_pressed("shootRight") && rightCannonAble:
-		summonProjectile("SMALL", $Right)
+		summonProjectile("SMALL", $Right, rightDelay)
 		rightCannonAble = false
 
 func take_damage(amount):

@@ -5,7 +5,7 @@ var speed := 100
 var size : String
 var speed_resistance := 1
 var speed_cutoff := 25
-
+var life_time : float = 0.75
 var appliedDamage : DmgPacket
 
 func setTargetVelocityDir(inputVel : Vector2) -> void:
@@ -34,18 +34,28 @@ func setSize(inputSize : String):
 		$SmallArea.monitoring  = true
 		$SmallSprite.visible = true
 
-
+func start_life():
+	$Lifespan.wait_time = life_time
+	$Lifespan.start()
 
 func _physics_process(delta: float) -> void:
 	velocity = target_velocity_dir
+	#Ball Resistance Code
 	target_velocity_dir -= target_velocity_dir.normalized() * speed_resistance
 	
 	if velocity.length() < speed_cutoff:
 		kill_self()
+		print("To slow")
 	move_and_slide()
 
 func kill_self():
 	queue_free()
 
 func _on_area_body_entered(body: Node2D) -> void:
-	print("COLLISION HERERRE")
+	if body.has_method("take_damage"):
+		body.take_damage(appliedDamage)
+	kill_self()
+
+
+func _on_lifespan_timeout() -> void:
+	kill_self()

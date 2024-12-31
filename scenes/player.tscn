@@ -25,6 +25,7 @@ position = Vector2(20, 0)
 rotation = -1.5708
 
 [node name="LeftReload" type="Timer" parent="Left"]
+wait_time = 0.01
 
 [node name="Right" type="Marker2D" parent="."]
 position = Vector2(-20, 0)

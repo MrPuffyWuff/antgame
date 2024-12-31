@@ -11,7 +11,7 @@ var target_velocity : Vector2
 var rotation_direction := 0.0
 
 func take_damage(damageStats : DmgPacket):
-	pass
+	print("Ow")
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
